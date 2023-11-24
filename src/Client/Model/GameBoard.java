@@ -232,16 +232,16 @@ public class GameBoard implements Serializable
                             if(board[k][j] instanceof Blade)
                             {
                                 board[i][j]=null;
-                                return false;
+                                return true;
                             }
                             board[k+1][j]=new Up("up");
                             board[i][j]=null;
-                            return false;
+                            return true;
                         }
                         if(board[k][j] instanceof Blade)
                         {
                             board[i][j]=null;
-                            return false;
+                            return true;
                         }
                         return false;
                     }

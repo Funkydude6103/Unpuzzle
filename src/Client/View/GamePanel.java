@@ -146,7 +146,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class GamePanel {
-    private static JButton buttons[][];
+    private static JButton[][] buttons;
     private static ActionListener a;
 
     public static JPanel createGUI() {
@@ -231,6 +231,8 @@ public class GamePanel {
                 setButtonIcon(board[i][j], i, j);
             }
         }
+        jPanel.removeAll();
+        initializeButtons(gameBoard.getBoard(),jPanel);
         jPanel.repaint();
         jPanel.revalidate();
     }
