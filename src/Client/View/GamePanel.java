@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.Objects;
 
 public class GamePanel {
-    private static JButton[][] buttons;
+    private  JButton[][] buttons;
     private static ActionListener a;
     public static void playMusic()
     {
@@ -45,16 +45,52 @@ public class GamePanel {
             e.printStackTrace();
         }
     }
-    public static JPanel createGUI(Level level, Player p, JFrame jFrame) {
+    public JPanel createGUI(Level level, Player p, JFrame jFrame) {
         JPanel main=new JPanel(new BorderLayout());
         JPanel jPanel = new JPanel(new GridLayout(10, 10));
-        JPanel movesPanel=new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel movesPanel=new JPanel(new FlowLayout(FlowLayout.CENTER,270,0));
+        JButton buyMoves=new JButton("Buy Moves");
         buttons = new JButton[10][10];
         GameBoard gameBoard = level.getGameBoard();
         Tile[][] board = gameBoard.getBoard();
         JLabel label23 = new JLabel("Moves "+gameBoard.getMoves());
         label23.setFont(new Font("Arial", Font.BOLD, 15));
+        buyMoves.setBackground(Color.BLACK);
+        buyMoves.setForeground(Color.WHITE);
         movesPanel.add(label23);
+        movesPanel.add(buyMoves);
+        buyMoves.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object[] options = {"5 Moves - 50 Diamonds",
+                        "10 Moves - 90 Diamonds",
+                        "20 Moves - 150 Diamonds"};
+
+                int choice = JOptionPane.showOptionDialog(null,
+                        "Choose an option:",
+                        "Options",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+
+                if (choice == 0) {
+                    // Handle 5 Moves - 50 Diamonds
+                    JOptionPane.showMessageDialog(null, "You selected: 5 Moves - 50 Diamonds");
+                    // Place your logic for this choice here
+                } else if (choice == 1) {
+                    // Handle 10 Moves - 90 Diamonds
+                    JOptionPane.showMessageDialog(null, "You selected: 10 Moves - 90 Diamonds");
+                    // Place your logic for this choice here
+                } else if (choice == 2) {
+                    // Handle 20 Moves - 150 Diamonds
+                    JOptionPane.showMessageDialog(null, "You selected: 20 Moves - 150 Diamonds");
+                    // Place your logic for this choice here
+                }
+            }
+
+        });
         main.add(movesPanel,BorderLayout.NORTH);
         a = new ActionListener() {
             @Override
@@ -96,16 +132,53 @@ public class GamePanel {
         main.add(jPanel,BorderLayout.CENTER);
         return main;
     }
-    public static JPanel createGUI(GameBoard gameBoard,Player p, JFrame jframe) {
+    public  JPanel createGUI(GameBoard gameBoard,Player p, JFrame jframe) {
         JPanel main=new JPanel(new BorderLayout());
-        JPanel movesPanel=new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel movesPanel=new JPanel(new FlowLayout(FlowLayout.CENTER,270,0));
+        JButton buyMoves=new JButton("Buy Moves");
+
         JPanel jPanel = new JPanel(new GridLayout(10, 10));
         buttons = new JButton[10][10];
         Tile[][] board = gameBoard.getBoard();
         JLabel label23 = new JLabel("Moves "+gameBoard.getMoves());
         label23.setFont(new Font("Arial", Font.BOLD, 15));
         movesPanel.add(label23);
+        movesPanel.add(buyMoves);
         main.add(movesPanel,BorderLayout.NORTH);
+        buyMoves.setBackground(Color.BLACK);
+        buyMoves.setForeground(Color.WHITE);
+        buyMoves.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object[] options = {"5 Moves - 50 Diamonds",
+                        "10 Moves - 90 Diamonds",
+                        "20 Moves - 150 Diamonds"};
+
+                int choice = JOptionPane.showOptionDialog(null,
+                        "Choose an option:",
+                        "Options",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+
+                if (choice == 0) {
+                    // Handle 5 Moves - 50 Diamonds
+                    JOptionPane.showMessageDialog(null, "You selected: 5 Moves - 50 Diamonds");
+                    // Place your logic for this choice here
+                } else if (choice == 1) {
+                    // Handle 10 Moves - 90 Diamonds
+                    JOptionPane.showMessageDialog(null, "You selected: 10 Moves - 90 Diamonds");
+                    // Place your logic for this choice here
+                } else if (choice == 2) {
+                    // Handle 20 Moves - 150 Diamonds
+                    JOptionPane.showMessageDialog(null, "You selected: 20 Moves - 150 Diamonds");
+                    // Place your logic for this choice here
+                }
+            }
+
+        });
         a = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -147,7 +220,7 @@ public class GamePanel {
         return main;
     }
 
-    private static void initializeButtons(Tile[][] board,JPanel jPanel) {
+    private  void initializeButtons(Tile[][] board,JPanel jPanel) {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 buttons[i][j] = new JButton();
@@ -163,7 +236,7 @@ public class GamePanel {
         }
     }
 
-    private static void setButtonIcon(Tile tile, int i, int j) {
+    private void setButtonIcon(Tile tile, int i, int j) {
         if (tile instanceof Up) {
             buttons[i][j].setIcon(createScaledImageIcon(((Up) tile).imagePath, 40, 40));
         } else if (tile instanceof Down) {
@@ -197,7 +270,7 @@ public class GamePanel {
         return null;
     }
 
-    private static void updateGUI(GameBoard gameBoard,JPanel jPanel) {
+    private  void updateGUI(GameBoard gameBoard,JPanel jPanel) {
         Tile[][] board = gameBoard.getBoard();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {

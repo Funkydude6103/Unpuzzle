@@ -59,7 +59,7 @@ public class Login
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Make the username Unique", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Wrong Credentials", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             }

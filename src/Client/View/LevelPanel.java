@@ -86,7 +86,8 @@ public class LevelPanel
 
        jPanel.add(upper,BorderLayout.NORTH);
         if(level!=null) {
-            jPanel.add(GamePanel.createGUI(level,p,J), BorderLayout.CENTER);
+            GamePanel gamePanel=new GamePanel();
+            jPanel.add(gamePanel.createGUI(level,p,J), BorderLayout.CENTER);
         }
         else
         {
@@ -95,7 +96,8 @@ public class LevelPanel
             level=new Level();
             level.setGameBoard(gameBoard);
             level.saveToDatabase();
-            jPanel.add(GamePanel.createGUI(gameBoard,p,J),BorderLayout.CENTER);
+            GamePanel gamePanel=new GamePanel();
+            jPanel.add(gamePanel.createGUI(gameBoard,p,J),BorderLayout.CENTER);
         }
         jPanel.setName("p1");
         return jPanel;
