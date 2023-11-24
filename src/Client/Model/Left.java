@@ -1,6 +1,8 @@
 package Client.Model;
 
-public class Left extends Tile{
+import java.io.Serializable;
+
+public class Left extends Tile implements Serializable {
     public final String imagePath="Resources/Images/left.png";
 
     public Left(String name) {

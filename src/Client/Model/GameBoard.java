@@ -14,6 +14,20 @@ public class GameBoard implements Serializable
     public Tile[][] getBoard() {
         return board;
     }
+    public Tile[][] deepCopyBoard() {
+        if (board == null) {
+            return null; // Or handle as required for your use case
+        }
+        Tile[][] copiedBoard = new Tile[10][10];
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                copiedBoard[i][j] = board[i][j]; // Assuming Tile implements Cloneable
+            }
+        }
+        return copiedBoard;
+    }
+
 
     public GameBoard()
     {
@@ -58,6 +72,7 @@ public class GameBoard implements Serializable
                 check[i][k][3] = false;
                 check[i][k][5] = false;
                 check[i][k][6] = false;
+                check[i][k][1]=false;
             }
         } else if (tile instanceof Right) {
             // Make all check[][][2] false to the right of the Right tile
@@ -65,6 +80,7 @@ public class GameBoard implements Serializable
                 check[i][k][2] = false;
                 check[i][k][5] = false;
                 check[i][k][6] = false;
+                check[i][k][1]=false;
             }
         } else if (tile instanceof Rotatory) {
             // Make all check[][][2] false to the right, [1] above, [0] below, [3] to the left of the Rotatory tile
@@ -196,6 +212,7 @@ public class GameBoard implements Serializable
                 break;
             }
         }
+        movesGenerator(level);
     }
     public void printBoard()
     {
@@ -210,6 +227,91 @@ public class GameBoard implements Serializable
             }
             System.out.println();
         }
+        System.out.println(moves);
+    }
+    public void printBoard(Tile[][] board_)
+    {
+        for (int i=0;i<10;i++)
+        {
+            for (int j=0;j<10;j++)
+            {
+                if(board_[i][j]!=null)
+                    System.out.print(board_[i][j].getName()+"  ");
+                else
+                    System.out.print("null ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println();
+    }
+    public Boolean empty()
+    {
+        for(int i=0;i<10;i++)
+        {
+            for(int j=0;j<10;j++)
+            {
+                if(board[i][j] instanceof Up)
+                {
+                    return false;
+                }
+                if(board[i][j] instanceof Down)
+                {
+                    return false;
+                }
+                if(board[i][j] instanceof Left)
+                {
+                     return false;
+                }
+                if(board[i][j] instanceof Right)
+                {
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
+
+    public int getMoves() {
+        return moves;
+    }
+
+    public void setMoves(int moves) {
+        this.moves = moves;
+    }
+
+    public void movesGenerator(int level)
+    {
+        int moves_=0;
+        Tile [][] board_=deepCopyBoard();
+        int check=0;
+        while (!empty())
+        {
+            printBoard(board_);
+            for (int i=0;i<10;i++)
+            {
+                for(int j=0;j<10;j++)
+                {
+                    if(moveOnGivenBoard(i,j,board_))
+                    {
+                        moves_++;
+                    }
+                }
+            }
+            check++;
+            if(check==5)
+            {
+                break;
+            }
+            printBoard(board_);
+        }
+        moves_= moves_+(int)(0.05*moves_);
+        if(check==5)
+        {
+            moves_=moves_+30;
+        }
+        setMoves(moves_);
     }
     public boolean move(int i,int j)
     {
@@ -268,15 +370,16 @@ public class GameBoard implements Serializable
                             if(board[k][j] instanceof Blade)
                             {
                                 board[i][j]=null;
-                                return false;
+                                return true;
                             }
                             board[k-1][j]=new Down("down");
                             board[i][j]=null;
+                            return true;
                         }
                         if(board[k][j] instanceof Blade)
                         {
                             board[i][j]=null;
-                            return false;
+                            return true;
                         }
                         return false;
                     }
@@ -304,15 +407,16 @@ public class GameBoard implements Serializable
                             if(board[i][k] instanceof Blade)
                             {
                                 board[i][j]=null;
-                                return false;
+                                return true;
                             }
                             board[i][k+1]=new Left("left");
                             board[i][j]=null;
+                            return true;
                         }
                         if(board[i][k] instanceof Blade)
                         {
                             board[i][j]=null;
-                            return false;
+                            return true;
                         }
                         return false;
                     }
@@ -335,19 +439,20 @@ public class GameBoard implements Serializable
                 for (k=j+1;k<10;k++)
                 {
                     if(board[i][k]!=null) {
-                        if(board[i][k] instanceof Blade)
-                        {
-                            board[i][j]=null;
-                            return false;
-                        }
                         if(k!=j+1) {
+                            if(board[i][k] instanceof Blade)
+                            {
+                                board[i][j]=null;
+                                return true;
+                            }
                             board[i][k-1]=new Right("right");
                             board[i][j]=null;
+                            return true;
                         }
                         if(board[i][k] instanceof Blade)
                         {
                             board[i][j]=null;
-                            return false;
+                            return true;
                         }
 
                         return false;
@@ -357,6 +462,206 @@ public class GameBoard implements Serializable
                 return true;
             }
         }
+        if(board[i][j] instanceof Rotatory)
+        {
+            if (i < 0 || i >= 10 || j < 0 || j >= 10) {
+                return false;
+            }
+            else
+            {
+                if (i - 1 >= 0 && i + 1 < 10 && j - 1 >= 0 && j + 1 < 10) {
+                    Tile temp = board[i - 1][j];
+                    board[i - 1][j] = board[i][j - 1];//Top becomes left
+                    Tile temp2 = board[i][j + 1];
+                    board[i][j + 1] = temp;//Right becomes Top
+                    Tile temp3 = board[i + 1][j];
+                    board[i + 1][j] = temp2;//Down becomes Right
+                    board[i][j - 1] = temp3;//left becomes Down
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+        }
+
+        return false;
+    }
+
+    public boolean moveOnGivenBoard(int i,int j,Tile[][] board_)
+    {
+        boolean check=true;
+        if(board_[i][j] instanceof Up)
+        {
+            if(i+1==1)
+            {
+                board_[i][j]=null;
+                return true;
+            }
+            else
+            {
+                int k=0;
+                int l=i;
+                for (k=i-1;k>=0;k--)
+                {
+                    if(board_[k][j]!=null) {
+                        if(k!=i-1) {
+                            if(board_[k][j] instanceof Blade)
+                            {
+                                board_[i][j]=null;
+                                return true;
+                            }
+                            board_[k+1][j]=new Up("up");
+                            board_[i][j]=null;
+                            return true;
+                        }
+                        if(board_[k][j] instanceof Blade)
+                        {
+                            board_[i][j]=null;
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                board_[i][j]=null;
+                return true;
+            }
+        }
+        if(board_[i][j] instanceof Down)
+        {
+            if(i+1==10)
+            {
+                board_[i][j]=null;
+                return true;
+            }
+            else
+            {
+                int k=0;
+                int l=i;
+                for (k=i+1;k<10;k++)
+                {
+                    if(board_[k][j]!=null) {
+                        if(k!=i+1) {
+                            if(board_[k][j] instanceof Blade)
+                            {
+                                board_[i][j]=null;
+                                return true;
+                            }
+                            board_[k-1][j]=new Down("down");
+                            board_[i][j]=null;
+                            return true;
+                        }
+                        if(board_[k][j] instanceof Blade)
+                        {
+                            board_[i][j]=null;
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                board_[i][j]=null;
+                return true;
+            }
+
+        }
+        if(board_[i][j] instanceof Left)
+        {
+            if(j+1==1)
+            {
+                board_[i][j]=null;
+                return true;
+            }
+            else
+            {
+                int k;
+                int l=i;
+                for (k=j-1;k>=0;k--)
+                {
+                    if(board_[i][k]!=null) {
+                        if(k!=j-1) {
+                            if(board_[i][k] instanceof Blade)
+                            {
+                                board_[i][j]=null;
+                                return true;
+                            }
+                            board_[i][k+1]=new Left("left");
+                            board_[i][j]=null;
+                            return true;
+                        }
+                        if(board_[i][k] instanceof Blade)
+                        {
+                            board_[i][j]=null;
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                board_[i][j]=null;
+                return true;
+            }
+        }
+        if(board_[i][j] instanceof Right)
+        {
+            if(j+1==10)
+            {
+                board_[i][j]=null;
+                return true;
+            }
+            else
+            {
+                int k=0;
+                int l=i;
+                for (k=j+1;k<10;k++)
+                {
+                    if(board_[i][k]!=null) {
+                        if(k!=j+1) {
+                            if(board_[i][k] instanceof Blade)
+                            {
+                                board_[i][j]=null;
+                                return true;
+                            }
+                            board_[i][k-1]=new Right("right");
+                            board_[i][j]=null;
+                            return true;
+                        }
+                        if(board_[i][k] instanceof Blade)
+                        {
+                            board_[i][j]=null;
+                            return true;
+                        }
+
+                        return false;
+                    }
+                }
+                board_[i][j]=null;
+                return true;
+            }
+        }
+        if(board_[i][j] instanceof Rotatory)
+        {
+            if (i < 0 || i >= 10 || j < 0 || j >= 10) {
+                return false;
+            }
+            else
+            {
+                if (i - 1 >= 0 && i + 1 < 10 && j - 1 >= 0 && j + 1 < 10) {
+                    Tile temp = board_[i - 1][j];
+                    board_[i - 1][j] = board_[i][j - 1];//Top becomes left
+                    Tile temp2 = board_[i][j + 1];
+                    board_[i][j + 1] = temp;//Right becomes Top
+                    Tile temp3 = board_[i + 1][j];
+                    board_[i + 1][j] = temp2;//Down becomes Right
+                    board_[i][j - 1] = temp3;//left becomes Down
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
 
         return false;
     }
@@ -364,7 +669,7 @@ public class GameBoard implements Serializable
     public static void main(String[] args) {
         int i,j;
         GameBoard g=new GameBoard();
-        g.solve_ableBoardGenerator(40);
+        g.solve_ableBoardGenerator(4);
         while (true) {
             g.printBoard();
             Scanner scanner = new Scanner(System.in);

@@ -1,6 +1,8 @@
 package Client.View;
 
 import Client.Controller.PlayerController;
+import Client.Model.GameBoard;
+import Client.Model.Level;
 import Client.Model.Player;
 
 import javax.imageio.ImageIO;
@@ -14,9 +16,18 @@ import java.net.URL;
 
 public class LevelPanel
 {
+    private static JPanel jPanel;
+    public static void update(Player p,JFrame J)
+    {
+        jPanel.removeAll();
+        jPanel=LevelPanel.createLevelPanel(p,J);
+        jPanel.revalidate();
+        jPanel.repaint();
+    }
     public static JPanel createLevelPanel(Player p,JFrame J)
     {
-        JPanel jPanel=new JPanel();
+        Level level=Level.loadFromDatabase(p.getLevel());
+        jPanel=new JPanel();
         jPanel.setBackground(Color.lightGray);
         jPanel.setLayout(new BorderLayout());
         JPanel upper=new JPanel(new FlowLayout(FlowLayout.LEFT,90,10));
@@ -30,6 +41,12 @@ public class LevelPanel
         button1.setPreferredSize(new Dimension(48, 48));
         button2.setPreferredSize(new Dimension(48, 48));
         button3.setPreferredSize(new Dimension(48, 48));
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Home.displayPanel(LevelPanel.createLevelPanel(p,J));
+            }
+        });
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,7 +85,18 @@ public class LevelPanel
         upper.add(j3);
 
        jPanel.add(upper,BorderLayout.NORTH);
-       jPanel.add(GamePanel.createGUI(),BorderLayout.CENTER);
+        if(level!=null) {
+            jPanel.add(GamePanel.createGUI(level,p,J), BorderLayout.CENTER);
+        }
+        else
+        {
+            GameBoard gameBoard=new GameBoard();
+            gameBoard.solve_ableBoardGenerator(p.getLevel());
+            level=new Level();
+            level.setGameBoard(gameBoard);
+            level.saveToDatabase();
+            jPanel.add(GamePanel.createGUI(gameBoard,p,J),BorderLayout.CENTER);
+        }
         jPanel.setName("p1");
         return jPanel;
     }

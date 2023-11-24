@@ -5,6 +5,7 @@ import Client.Model.Player;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,7 +15,7 @@ import java.net.URL;
 import java.util.Objects;
 
 public class Home {
-    private JPanel mainPanel;
+    private static JPanel mainPanel;
     private JPanel panel1;
     private JPanel panel2;
     private JScrollPane panel3;
@@ -29,6 +30,13 @@ public class Home {
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
+            // Get the FloatControl object to adjust the volume
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+
+            // Set the volume reduction (in decibels) here, for example, -20.0f
+            float volumeReductionInDecibels = -35.0f;
+            gainControl.setValue(volumeReductionInDecibels);
+
             clip.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
@@ -72,6 +80,8 @@ public class Home {
 
         JPanel menuPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 10));
         menuPanel.setBackground(Color.WHITE);
+        Border thickBorder = BorderFactory.createLineBorder(Color.BLUE, 2);
+        menuPanel.setBorder(thickBorder);
         menuPanel.add(button1);
         menuPanel.add(button2);
         menuPanel.add(button3);
@@ -133,7 +143,7 @@ public class Home {
     }
 
 
-    private void displayPanel(JComponent panel) {
+    public static void displayPanel(JComponent panel) {
         mainPanel.removeAll();
         mainPanel.add(panel, BorderLayout.CENTER);
         mainPanel.revalidate();

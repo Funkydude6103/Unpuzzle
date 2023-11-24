@@ -1,6 +1,8 @@
 package Client.Model;
 
-public class Up extends Tile{
+import java.io.Serializable;
+
+public class Up extends Tile implements Serializable {
     public final String imagePath="Resources/Images/up.png";
 
     public Up(String name) {
