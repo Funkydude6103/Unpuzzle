@@ -16,7 +16,12 @@ import java.net.URL;
 
 public class LevelPanel
 {
+    private static JLabel label23;
     private static JPanel jPanel;
+    public static void UpdateDiamondLabel(Player p)
+    {
+        label23.setText(Integer.toString(p.getDiamond()));
+    }
     public static void update(Player p,JFrame J)
     {
         jPanel.removeAll();
@@ -75,7 +80,7 @@ public class LevelPanel
         // Right side with an image and a label
         ImageIcon imageIcon = createScaledImageIcon("Resources/Images/diamond.png",48,48); // Replace with your image path
         JLabel imageLabel = new JLabel(imageIcon);
-        JLabel label23 = new JLabel(String.valueOf(p.getDiamond()));
+         label23 = new JLabel(String.valueOf(p.getDiamond()));
         label23.setFont(new Font("Arial", Font.BOLD, 20));
         j3.add(imageLabel);
         j3.add(label23);

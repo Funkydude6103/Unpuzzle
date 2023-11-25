@@ -26,6 +26,7 @@ public class GamePanel {
             clip.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
+
         }
     }
 
@@ -76,17 +77,49 @@ public class GamePanel {
                         options[0]);
 
                 if (choice == 0) {
-                    // Handle 5 Moves - 50 Diamonds
-                    JOptionPane.showMessageDialog(null, "You selected: 5 Moves - 50 Diamonds");
-                    // Place your logic for this choice here
+                    if(p.getDiamond()>50)
+                    {
+                        String m[]=label23.getText().split(" ");
+                        int mo=Integer.parseInt(m[1]);
+                        mo+=5 ;
+                        label23.setText("Moves "+mo);
+                        p.setDiamond(p.getDiamond()-50);
+                        p.save();
+                        LevelPanel.UpdateDiamondLabel(p);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Not Enough Diamonds");
+                    }
                 } else if (choice == 1) {
-                    // Handle 10 Moves - 90 Diamonds
-                    JOptionPane.showMessageDialog(null, "You selected: 10 Moves - 90 Diamonds");
-                    // Place your logic for this choice here
+                    if(p.getDiamond()>90)
+                    {
+                        String m[]=label23.getText().split(" ");
+                        int mo=Integer.parseInt(m[1]);
+                        mo+=10 ;
+                        label23.setText("Moves "+mo);
+                        p.setDiamond(p.getDiamond()-90);
+                        p.save();
+                        LevelPanel.UpdateDiamondLabel(p);
+
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Not Enough Diamonds");
+                    }
+
                 } else if (choice == 2) {
-                    // Handle 20 Moves - 150 Diamonds
-                    JOptionPane.showMessageDialog(null, "You selected: 20 Moves - 150 Diamonds");
-                    // Place your logic for this choice here
+                    if(p.getDiamond()>150)
+                    {
+                        String m[]=label23.getText().split(" ");
+                        int mo=Integer.parseInt(m[1]);
+                        mo+=20 ;
+                        label23.setText("Moves "+mo);
+                        p.setDiamond(p.getDiamond()-150);
+                        p.save();
+                        LevelPanel.UpdateDiamondLabel(p);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Not Enough Diamonds");
+                    }
                 }
             }
 
@@ -125,6 +158,7 @@ public class GamePanel {
                 }
                 //gameBoard.printBoard();
                 updateGUI(gameBoard,jPanel); // Update GUI after move
+
             }
         };
 
@@ -164,17 +198,49 @@ public class GamePanel {
                         options[0]);
 
                 if (choice == 0) {
-                    // Handle 5 Moves - 50 Diamonds
-                    JOptionPane.showMessageDialog(null, "You selected: 5 Moves - 50 Diamonds");
-                    // Place your logic for this choice here
+                    if(p.getDiamond()>50)
+                    {
+                        String m[]=label23.getText().split(" ");
+                        int mo=Integer.parseInt(m[1]);
+                        mo+=5 ;
+                        label23.setText("Moves "+mo);
+                        p.setDiamond(p.getDiamond()-50);
+                        p.save();
+                        LevelPanel.UpdateDiamondLabel(p);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Not Enough Diamonds");
+                    }
                 } else if (choice == 1) {
-                    // Handle 10 Moves - 90 Diamonds
-                    JOptionPane.showMessageDialog(null, "You selected: 10 Moves - 90 Diamonds");
-                    // Place your logic for this choice here
+                    if(p.getDiamond()>90)
+                    {
+                        String m[]=label23.getText().split(" ");
+                        int mo=Integer.parseInt(m[1]);
+                        mo+=10 ;
+                        label23.setText("Moves "+mo);
+                        p.setDiamond(p.getDiamond()-90);
+                        p.save();
+                        LevelPanel.UpdateDiamondLabel(p);
+
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Not Enough Diamonds");
+                    }
+
                 } else if (choice == 2) {
-                    // Handle 20 Moves - 150 Diamonds
-                    JOptionPane.showMessageDialog(null, "You selected: 20 Moves - 150 Diamonds");
-                    // Place your logic for this choice here
+                    if(p.getDiamond()>150)
+                    {
+                        String m[]=label23.getText().split(" ");
+                        int mo=Integer.parseInt(m[1]);
+                        mo+=20 ;
+                        label23.setText("Moves "+mo);
+                        p.setDiamond(p.getDiamond()-150);
+                        p.save();
+                        LevelPanel.UpdateDiamondLabel(p);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Not Enough Diamonds");
+                    }
                 }
             }
 
@@ -253,6 +319,7 @@ public class GamePanel {
             buttons[i][j].setIcon(createScaledImageIcon(((Wall) tile).imagePath, 40, 40));
         } else {
             buttons[i][j].setName("-");
+
         }
     }
 
