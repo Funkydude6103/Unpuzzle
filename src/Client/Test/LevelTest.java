@@ -6,11 +6,13 @@ import Client.Model.Level;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LevelTest {
-
+//Only Works If the Level Table is Empty
     @org.junit.jupiter.api.Test
     void saveToDatabase() {
         Level level=new Level();
-//        level.setGameBoard(new GameBoard("hello"));
+        GameBoard gameBoard=new GameBoard();
+        gameBoard.setMoves(3);
+        level.setGameBoard(gameBoard);
         level.saveToDatabase();
     }
 
@@ -18,6 +20,6 @@ class LevelTest {
     void loadFromDatabase() {
         Level level=Level.loadFromDatabase(1);
         GameBoard b=level.getGameBoard();
-//        assertEquals(b.getName(),"hello");
+        assertEquals(b.getMoves(),3);
     }
 }

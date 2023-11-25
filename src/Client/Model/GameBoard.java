@@ -666,17 +666,4 @@ public class GameBoard implements Serializable
         return false;
     }
 
-    public static void main(String[] args) {
-        int i,j;
-        GameBoard g=new GameBoard();
-        g.solve_ableBoardGenerator(4);
-        while (true) {
-            g.printBoard();
-            Scanner scanner = new Scanner(System.in);
-            i = scanner.nextInt();
-            j = scanner.nextInt();
-            g.move(i,j);
-        }
-
-    }
 }
