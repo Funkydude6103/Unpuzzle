@@ -306,10 +306,10 @@ public class GameBoard implements Serializable
             }
             printBoard(board_);
         }
-        moves_= moves_+(int)(0.05*moves_);
+        moves_= moves_+(int)(0.005*moves_);
         if(check==5)
         {
-            moves_=moves_+30;
+            moves_=moves_+5;
         }
         setMoves(moves_);
     }
