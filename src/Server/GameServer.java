@@ -1,40 +1,23 @@
 package Server;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
-public class GameServer implements Runnable{
-    private static final int PORT = 8888;
-    private static final int MAX_PLAYERS = 100; // Maximum number of players supported by the server
-    private List<GameHandler> waitingPlayers = new ArrayList<>();
-
+public class GameServer{
     public static void main(String[] args) {
-        GameServer server = new GameServer();
-        server.run();
-    }
-
-    @Override
-    public void run() {
         try {
-            ServerSocket serverSocket = new ServerSocket(PORT);
-            System.out.println("Server started. Waiting for players...");
+            try (ServerSocket serverSocket = new ServerSocket(8888)) {
+                System.out.println("Server waiting for players...");
 
-            while (true) {
-                if (waitingPlayers.size() < 2) {
-                    Socket socket = serverSocket.accept();
-                    System.out.println("Player connected: " + socket);
+                while (true) {
+                    Socket player1Socket = serverSocket.accept();
+                    System.out.println("Player 1 connected");
 
-                    GameHandler player = new GameHandler(socket);
-                    waitingPlayers.add(player);
+                    Socket player2Socket = serverSocket.accept();
+                    System.out.println("Player 2 connected");
 
-                    if (waitingPlayers.size() == 2) {
-                        // Start the game for two waiting players
-                        GameHandler.startGame(waitingPlayers.get(0), waitingPlayers.get(1));
-                        waitingPlayers.clear();
-                    }
+                    Thread gameThread = new Thread(new GameHandler(player1Socket, player2Socket));
+                    gameThread.start();
                 }
             }
         } catch (IOException e) {

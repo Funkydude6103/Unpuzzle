@@ -1,44 +1,32 @@
 package Server;
 
+import Client.Model.GameBoard;
+
+import java.io.*;
 import java.net.Socket;
 
-class GameHandler {
-    private Socket socket;
+class GameHandler implements Runnable {
+    private final Socket player1Socket;
+    private final Socket player2Socket;
 
-    public GameHandler(Socket socket) {
-        this.socket = socket;
+    public GameHandler(Socket player1Socket, Socket player2Socket) {
+        this.player1Socket = player1Socket;
+        this.player2Socket = player2Socket;
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
-    public boolean isDisconnected() {
-
-        return socket.isClosed() || !socket.isConnected();
-    }
-
-    public static void startGame(GameHandler player1, GameHandler player2) {
-        // Start a new thread or manage a game instance between two players
-        // Example: Create a new Game instance and handle communication between player1 and player2
-        // You'll need to implement your game logic here
-
-        // Example:
-        // Game game = new Game(player1, player2);
-        // game.start(); // Start the game
-
-        System.out.println("Game started between " + player1.getSocket() + " and " + player2.getSocket());
-
-        while (!player1.isDisconnected() && !player2.isDisconnected()) {
-            System.out.println("d");
-        }
-
-        // If a player disconnected, handle the situation accordingly
-        if (player1.isDisconnected()) {
-            System.out.println("Player 1 disconnected");
-            // Handle the case where player 1 has disconnected
-        } else if (player2.isDisconnected()) {
-            System.out.println("Player 2 disconnected");
-            // Handle the case where player 2 has disconnected
+    @Override
+    public void run() {
+        try {
+            GameBoard gameBoard=new GameBoard();
+            gameBoard.solve_ableBoardGenerator(20);
+            ObjectOutputStream player1Out_ = new ObjectOutputStream(player1Socket.getOutputStream());
+            ObjectOutputStream player2Out_ = new ObjectOutputStream(player2Socket.getOutputStream());
+            player1Out_.writeObject(gameBoard);
+            player2Out_.writeObject(gameBoard);
+            player1Socket.close();
+            player2Socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
