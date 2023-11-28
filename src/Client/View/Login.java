@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class Login
 {
@@ -55,7 +56,13 @@ public class Login
                     JOptionPane.showMessageDialog(null,"Successful");
                     frame.dispose();
                     Home home=new Home();
-                    home.createGUI(playerController,1,1);
+                    try {
+                        home.createGUI(playerController,1,1);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 else
                 {

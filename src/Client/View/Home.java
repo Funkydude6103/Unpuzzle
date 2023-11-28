@@ -34,7 +34,7 @@ public class Home {
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
             // Set the volume reduction (in decibels) here, for example, -20.0f
-            float volumeReductionInDecibels = -35.0f;
+            float volumeReductionInDecibels = -15.0f;
             gainControl.setValue(volumeReductionInDecibels);
 
             clip.start();
@@ -48,7 +48,7 @@ public class Home {
             clip.close();
         }
     }
-    public void createGUI(PlayerController playerController,int sound,int music) {
+    public void createGUI(PlayerController playerController,int sound,int music) throws IOException, ClassNotFoundException {
         Player p=playerController.getPlayer();
         System.out.println(p.getUsername());
         JFrame jFrame=new JFrame("Unpuzzle");
@@ -63,7 +63,7 @@ public class Home {
 
 
         panel1 = LevelPanel.createLevelPanel(playerController.getPlayer(),jFrame);
-        panel2 = MultiplayerPanel.createMultiplayerPanel(jFrame,playerController);
+        panel2 = MultiplayerPanel.crateMultiplayerPanel();
         panel3 = PurchasePanel.createPurchasePanel();
         panel4 = LeaderBoardPanel.createScrollPane(playerController);
 
@@ -110,6 +110,15 @@ public class Home {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(MultiplayerPanel.socket!=null) {
+                    try {
+                        MultiplayerPanel.socket.close();
+                        MultiplayerPanel.socket=null;
+                        Thread.sleep(1000);
+                    } catch (IOException | InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
                 if(targetPanel.getName().matches("p1"))
                 displayPanel(LevelPanel.createLevelPanel(p.getPlayer(),jFrame));
                 else if(targetPanel.getName().matches("p3"))
@@ -117,7 +126,13 @@ public class Home {
                 else if(targetPanel.getName().matches("p4"))
                     displayPanel(LeaderBoardPanel.createScrollPane(p));
                 else if (targetPanel.getName().matches("p2")) {
-                    displayPanel(MultiplayerPanel.createMultiplayerPanel(jFrame,p));
+                    try {
+
+                        MultiplayerPanel multiplayerPanel=new MultiplayerPanel();
+                        displayPanel(multiplayerPanel.createMultiplayerPanel(jFrame,p));
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
                 } else
                 {
