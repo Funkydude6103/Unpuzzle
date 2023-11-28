@@ -23,6 +23,7 @@ class GameHandler implements Runnable {
             ObjectOutputStream player2Out_ = new ObjectOutputStream(player2Socket.getOutputStream());
             player1Out_.writeObject(gameBoard);
             player2Out_.writeObject(gameBoard);
+
             player1Socket.close();
             player2Socket.close();
         } catch (IOException e) {
