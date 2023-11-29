@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.Socket;
 import java.net.URL;
 import java.util.Objects;
 
@@ -110,13 +111,36 @@ public class Home {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(MultiplayerPanel.socket!=null) {
-                    try {
-                        MultiplayerPanel.socket.close();
-                        MultiplayerPanel.socket=null;
-                        Thread.sleep(1000);
-                    } catch (IOException | InterruptedException ex) {
-                        throw new RuntimeException(ex);
+                if(MultiplayerPanel.gameStarted!=null) {
+                    if(MultiplayerPanel.gameStarted)
+                    {
+                        PrintWriter out = null;
+                        try {
+                            out = new PrintWriter(MultiplayerPanel.socket.getOutputStream(), true);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        out.println("LOSS:1"); // Sending a line of text to the server
+                        MultiplayerPanel.gameStarted=null;
+                    }
+                    if(MultiplayerPanel.gameStarted!=null && !MultiplayerPanel.gameStarted)
+                    {
+                        try {
+                            Socket socket = new Socket("localhost", 8888);
+                            socket.close();
+                            MultiplayerPanel.gameStarted=null;
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    if (MultiplayerPanel.socket != null) {
+                        try {
+                            MultiplayerPanel.socket.close();
+                            MultiplayerPanel.socket = null;
+                            Thread.sleep(1000);
+                        } catch (IOException | InterruptedException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
                 if(targetPanel.getName().matches("p1"))

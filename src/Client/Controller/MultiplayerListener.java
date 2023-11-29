@@ -33,6 +33,7 @@ public class MultiplayerListener extends Thread {
                 player.getPlayer().save();
                 Home.displayPanel(LevelPanel.createLevelPanel(player.getPlayer(),jframe));
 
+
             }
             if (message.split(":")[0].equals("LOSS"))
             {

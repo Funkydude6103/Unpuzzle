@@ -49,6 +49,8 @@ class GameHandler implements Runnable {
                             player1Out_.writeObject("LOSS:2");
                             gameFinished.set(true);
                         }
+                    player2Socket.close();
+                    player1Socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -74,6 +76,8 @@ class GameHandler implements Runnable {
                             player2Out_.writeObject("LOSS:1");
                             gameFinished.set(true);
                         }
+                        player2Socket.close();
+                        player1Socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -85,8 +89,6 @@ class GameHandler implements Runnable {
             player2Thread.join();
 
 
-            player1Socket.close();
-            player2Socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

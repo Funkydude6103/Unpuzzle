@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
@@ -24,6 +26,7 @@ public class MultiplayerPanel
     private  JButton[][] buttons;
     private static ActionListener a;
     public static Socket socket;
+    public static Boolean gameStarted=null;
 
     public static JPanel crateMultiplayerPanel()
     {
@@ -58,6 +61,7 @@ public class MultiplayerPanel
         // Create a separate thread to listen for the GameBoard from the server
         new Thread(() -> {
             try {
+                gameStarted=false;
                 socket = new Socket("localhost", 8888);
                 ObjectInputStream in_ = new ObjectInputStream(socket.getInputStream());
                 GameBoard receivedGameBoard = (GameBoard) in_.readObject();
@@ -65,13 +69,30 @@ public class MultiplayerPanel
                 MultiplayerListener multiplayerListener=new MultiplayerListener(socket,in_,playerController,jFrame);
                 multiplayerListener.start();
                 // Update the UI on the Event Dispatch Thread (EDT)
+                jFrame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        super.windowClosing(e);
+                        if(socket!=null && socket.isConnected() && !socket.isClosed()) {
+                            PrintWriter out = null;
+                            try {
+                                out = new PrintWriter(socket.getOutputStream(), true);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            out.println("LOSS:1"); // Sending a line of text to the server
+                            gameStarted = null;
+                        }
+                    }
+                });
                 SwingUtilities.invokeLater(() -> {
-
+                    gameStarted=true;
                     panel.removeAll();
                     panel.add( createGUI(receivedGameBoard,playerController.getPlayer(),jFrame,socket));
                     panel.revalidate();
                     panel.repaint();
                 });
+
 
             } catch (IOException | ClassNotFoundException e) {
                 Home.displayPanel(LevelPanel.createLevelPanel(playerController.getPlayer(),jFrame));
@@ -132,6 +153,7 @@ public class MultiplayerPanel
                         throw new RuntimeException(ex);
                     }
                     out.println("WIN:1"); // Sending a line of text to the server
+                    gameStarted=null;
                 }
                 if(mo==0)
                 {
@@ -142,6 +164,7 @@ public class MultiplayerPanel
                         throw new RuntimeException(ex);
                     }
                     out.println("LOSS:1"); // Sending a line of text to the server
+                    gameStarted=null;
                 }
                 //gameBoard.printBoard();
                 updateGUI(gameBoard,jPanel); // Update GUI after move
