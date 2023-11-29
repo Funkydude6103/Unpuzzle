@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Controller.PaymentListener;
+import Client.Model.Player;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class PurchasePanel {
-    public static JScrollPane createPurchasePanel() {
+    public static JScrollPane createPurchasePanel(Player player) {
         JPanel mainPanel = new JPanel(new GridLayout(6, 1, 0, 20));
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Added empty border for vertical space
@@ -50,7 +51,7 @@ public class PurchasePanel {
             roundedSquare.add(centerPanel, BorderLayout.CENTER);
 
             JButton buyButton = new JButton("Buy " + prices[i] + " PKR");
-            buyButton.addActionListener(new PaymentListener("Buy " + prices[i] + " PKR"));
+            buyButton.addActionListener(new PaymentListener("Buy " + prices[i] + " PKR",player));
             buyButton.setBackground(Color.green);
             buyButton.setPreferredSize(new Dimension(100, 30)); // Defined width and height for the button
             roundedSquare.add(buyButton, BorderLayout.SOUTH);

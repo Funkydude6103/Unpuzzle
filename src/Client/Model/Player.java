@@ -120,7 +120,7 @@ public class Player
         return false;
     }
 
-    private boolean checkUsernameExists(String usernameToCheck) {
+    public boolean checkUsernameExists(String usernameToCheck) {
         String query = "SELECT * FROM Player WHERE username = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {

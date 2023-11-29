@@ -2,89 +2,91 @@ package Client.View;
 
 import Client.Controller.PlayerController;
 import Client.Model.Player;
-import com.sun.tools.javac.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class Profile
-{
-    public static JPanel createUserPanel(Player player,JFrame jFrame) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+public class Profile {
+    public static JPanel createUserPanel(Player player, JFrame jFrame) {
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding
 
-        // Panel for labels and text fields
-        JPanel inputPanel = new JPanel(new GridLayout(3, 2, 0, 10)); // Three rows, two columns
+        // Heading Label
+        JLabel headingLabel = new JLabel("Profile");
+        headingLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        headingLabel.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(headingLabel, BorderLayout.NORTH);
 
-        // Username label and field (Bigger font)
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Username label and field
         JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Bigger font
-        JTextField usernameField = new JTextField();
-        usernameField.setFont(new Font("Arial", Font.PLAIN, 14)); // Smaller font
-        usernameField.setText(player.getUsername());
-        usernameField.setSize(50,50);
-        inputPanel.add(usernameLabel);
-        inputPanel.add(usernameField);
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        inputPanel.add(usernameLabel, gbc);
 
-        // Password label and field (Bigger font)
+        gbc.gridx++;
+        JTextField usernameField = new JTextField(player.getUsername());
+        usernameField.setPreferredSize(new Dimension(200, 30));
+        inputPanel.add(usernameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+
+        // Password label and field
         JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Bigger font
-        JTextField passwordField = new JTextField();
-        passwordField.setText(player.getPassword());
-        passwordField.setFont(new Font("Arial", Font.PLAIN, 14)); // Smaller font
-        inputPanel.add(passwordLabel);
-        inputPanel.add(passwordField);
+        passwordLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        inputPanel.add(passwordLabel, gbc);
 
-        // Age label and field (Bigger font)
+        gbc.gridx++;
+        JTextField passwordField = new JTextField(player.getPassword());
+        passwordField.setPreferredSize(new Dimension(200, 30));
+        inputPanel.add(passwordField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+
+        // Age label and field
         JLabel ageLabel = new JLabel("Age:");
-        ageLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Bigger font
-        JTextField ageField = new JTextField();
-        ageField.setText(player.getAge().toString());
-        ageField.setFont(new Font("Arial", Font.PLAIN, 14)); // Smaller font
-        inputPanel.add(ageLabel);
-        inputPanel.add(ageField);
+        ageLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        inputPanel.add(ageLabel, gbc);
+
+        gbc.gridx++;
+        JTextField ageField = new JTextField(player.getAge().toString());
+        ageField.setPreferredSize(new Dimension(200, 30));
+        inputPanel.add(ageField, gbc);
 
         panel.add(inputPanel, BorderLayout.CENTER);
 
-        // Logout button (Left-aligned, South position)
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
         JButton logoutButton = new JButton("Logout");
-        JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        logoutPanel.add(logoutButton);
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player.deletefile();
-                jFrame.dispose();
-                Loading loading=new Loading();
-                loading.createGUI(PlayerController.checkAndCreateFile());
-            }
+        logoutButton.addActionListener(e -> {
+            player.deletefile();
+            jFrame.dispose();
+            Loading loading = new Loading();
+            loading.createGUI(PlayerController.checkAndCreateFile());
         });
-       // panel.add(logoutPanel, BorderLayout.SOUTH);
+        buttonPanel.add(logoutButton);
 
-        // Save button (Right-aligned, South position)
         JButton saveButton = new JButton("Save");
-        JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        savePanel.add(saveButton);
-        JPanel p=new JPanel();
-        p.add(logoutPanel);
-        p.add(savePanel);
-        panel.add(p, BorderLayout.SOUTH);
-
         saveButton.addActionListener(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
             String ageText = ageField.getText();
 
-            // Mandatory checks
             if (username.isEmpty() || password.isEmpty() || ageText.isEmpty()) {
                 JOptionPane.showMessageDialog(panel, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (player.checkUsernameExists(username) && !player.getUsername().equals(username)) {
+                JOptionPane.showMessageDialog(panel, "Make the username Unique", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
                     int age = Integer.parseInt(ageText);
-
-                    // Additional check for positive age values
                     if (age < 0) {
                         JOptionPane.showMessageDialog(panel, "Age must be a positive integer.", "Error", JOptionPane.ERROR_MESSAGE);
                     } else {
@@ -98,9 +100,10 @@ public class Profile
                 }
             }
         });
+        buttonPanel.add(saveButton);
 
+        panel.add(buttonPanel, BorderLayout.SOUTH);
 
         return panel;
     }
-
 }

@@ -65,7 +65,7 @@ public class Home {
 
         panel1 = LevelPanel.createLevelPanel(playerController.getPlayer(),jFrame);
         panel2 = MultiplayerPanel.crateMultiplayerPanel();
-        panel3 = PurchasePanel.createPurchasePanel();
+        panel3 = PurchasePanel.createPurchasePanel(playerController.getPlayer());
         panel4 = LeaderBoardPanel.createScrollPane(playerController);
 
 
@@ -146,7 +146,7 @@ public class Home {
                 if(targetPanel.getName().matches("p1"))
                 displayPanel(LevelPanel.createLevelPanel(p.getPlayer(),jFrame));
                 else if(targetPanel.getName().matches("p3"))
-                    displayPanel(PurchasePanel.createPurchasePanel());
+                    displayPanel(PurchasePanel.createPurchasePanel(p.getPlayer()));
                 else if(targetPanel.getName().matches("p4"))
                     displayPanel(LeaderBoardPanel.createScrollPane(p));
                 else if (targetPanel.getName().matches("p2")) {
