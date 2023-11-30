@@ -20,7 +20,7 @@ class GameHandler implements Runnable {
         try {
             //Sending the game Board to both of the Clients
             GameBoard gameBoard=new GameBoard();
-            gameBoard.solve_ableBoardGenerator(1);
+            gameBoard.solve_ableBoardGenerator(25);
             ObjectOutputStream player1Out_ = new ObjectOutputStream(player1Socket.getOutputStream());
             ObjectOutputStream player2Out_ = new ObjectOutputStream(player2Socket.getOutputStream());
             player1Out_.writeObject(gameBoard);

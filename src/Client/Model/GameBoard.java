@@ -80,7 +80,7 @@ public class GameBoard implements Serializable
                 check[i][k][2] = false;
                 check[i][k][5] = false;
                 check[i][k][6] = false;
-                check[i][k][1]=false;
+                check[i][k][0]=false;
             }
         } else if (tile instanceof Rotatory) {
             // Make all check[][][2] false to the right, [1] above, [0] below, [3] to the left of the Rotatory tile
