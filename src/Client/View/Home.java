@@ -118,7 +118,6 @@ public class Home {
                         try {
                             out = new PrintWriter(MultiplayerPanel.socket.getOutputStream(), true);
                         } catch (IOException ex) {
-                            throw new RuntimeException(ex);
                         }
                         out.println("LOSS:1"); // Sending a line of text to the server
                         MultiplayerPanel.gameStarted=null;
@@ -130,7 +129,6 @@ public class Home {
                             socket.close();
                             MultiplayerPanel.gameStarted=null;
                         } catch (IOException ex) {
-                            throw new RuntimeException(ex);
                         }
                     }
                     if (MultiplayerPanel.socket != null) {
@@ -139,7 +137,6 @@ public class Home {
                             MultiplayerPanel.socket = null;
                             Thread.sleep(1000);
                         } catch (IOException | InterruptedException ex) {
-                            throw new RuntimeException(ex);
                         }
                     }
                 }

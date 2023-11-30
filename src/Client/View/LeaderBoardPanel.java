@@ -35,13 +35,19 @@ public class LeaderBoardPanel
         tableModel.addColumn("Position");
         tableModel.addColumn("Username");
         tableModel.addColumn("Level");
-
         int pos = 1;
-        int lv = 100000;
-
+        int check=0;
+        Integer lv = 1000000000;
+        int prevLevel = 0;
         for (Player player : players) {
-            if (lv < player.getLevel()) {
+
+            if (check == 0) {
+                prevLevel = player.getLevel();
+                check = 1;
+            }
+            if (prevLevel != player.getLevel()) {
                 pos++;
+                prevLevel = player.getLevel();
             }
 
             // Add player information to the table model
